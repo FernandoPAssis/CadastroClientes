@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Cadastro.Api/Cadastro.Api.csproj" />
+  <Project Path="Cadastro.Tests/Cadastro.Tests.csproj" />
+</Solution>
