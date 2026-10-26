@@ -2,6 +2,7 @@
 using Cadastro.Api.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Cadastro.Api.Messaging;
 
 namespace Cadastro.Api.Controllers
 {
@@ -10,10 +11,12 @@ namespace Cadastro.Api.Controllers
     public class ClientesController : ControllerBase
     {
         private readonly CadastroDbContext _db;
+        private readonly RabbitMqPublisher _publisher;
 
-        public ClientesController(CadastroDbContext db)
+        public ClientesController(CadastroDbContext db, RabbitMqPublisher publisher)
         {
             _db = db;
+            _publisher = publisher;
         }
 
         [HttpPost]
@@ -45,7 +48,18 @@ namespace Cadastro.Api.Controllers
             await _db.SaveChangesAsync();
 
 
+            //>>> RabbitMQ
+            // 4. avisa os outros serviços que um cliente foi cadastrado
+            ClienteCadastradoEvento evento = new ClienteCadastradoEvento
+            {
+                ClienteId = cliente.Id,
+                Nome = cliente.Nome,
+                RendaMensal = cliente.RendaMensal,
+                DataCadastro = cliente.DataCadastro
+            };
 
+            await _publisher.PublicarClienteCadastradoAsync(evento);
+            //<<< RabbitMQ
 
 
             return CreatedAtAction(nameof(ObterPorId), new { id = cliente.Id }, cliente);   // 201

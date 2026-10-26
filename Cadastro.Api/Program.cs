@@ -1,5 +1,7 @@
 using Cadastro.Api.Data;                         
-using Microsoft.EntityFrameworkCore;             
+using Microsoft.EntityFrameworkCore;
+using Cadastro.Api.Messaging;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,21 @@ builder.Services.AddOpenApi();
 // Registra o banco SQLite usando a connection string do appsettings.json
 builder.Services.AddDbContext<CadastroDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CadastroDb")));
+
+
+
+
+// >>> RabbitMQ: abre UMA conexão quando a API sobe e reaproveita em todas as requisições
+ConnectionFactory fabrica = new ConnectionFactory
+{
+    HostName = builder.Configuration["RabbitMQ:HostName"] ?? "localhost"
+};
+IConnection conexaoRabbit = await fabrica.CreateConnectionAsync();
+
+builder.Services.AddSingleton(conexaoRabbit);
+builder.Services.AddSingleton<RabbitMqPublisher>();
+// <<< RabbitMQ:
+
 
 
 var app = builder.Build();
