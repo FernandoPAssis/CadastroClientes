@@ -1,6 +1,19 @@
 @Cadastro.Api_HostAddress = http://localhost:5064
 
-GET {{Cadastro.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+# GET {{Cadastro.Api_HostAddress}}/weatherforecast/
+# Accept: application/json
 
+POST {{Cadastro.Api_HostAddress}}/api/v1/clientes
+Content-Type: application/json
+
+{
+  "nome": "Maria Silva",
+  "cpf": "529.982.247-25",
+  "email": "maria@email.com",
+  "rendaMensal": 5000
+}
+
+###
+
+GET {{Cadastro.Api_HostAddress}}/api/v1/clientes/COLE-O-ID-AQUI
 ###

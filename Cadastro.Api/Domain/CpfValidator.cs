@@ -2,36 +2,6 @@
 {
     public static class CpfValidator
     {
-        //public static bool IsValid(string? cpf)
-        //{
-        //    if (string.IsNullOrWhiteSpace(cpf)) return false;
-
-        //    // remove pontos e traço
-        //    string digits = new string(cpf.Where(char.IsDigit).ToArray());
-        //    if (digits.Length != 11)
-        //        return false;
-
-        //    // 111.111.111-11, 000.000.000-00 etc. são inválidos
-        //    if (digits.Distinct().Count() == 1) return false;
-
-        //    int[] numbers = digits.Select (c => c - '0').ToArray();
-
-        //    return numbers[9] == CalculateDigit(numbers, 9) 
-        //        && numbers[10] == CalculateDigit(numbers, 10);
-        //}
-
-
-        //private static int CalculateDigit(int[] numbers, int length)
-        //{
-        //    var sum = 0;
-        //    for (var i = 0; i < length; i++)
-        //        sum += numbers[i] * (length + 1 - i);
-
-        //    var rest = sum % 11;
-        //    return rest < 2 ? 0 : 11 - rest;
-        //}
-
-
         public static bool IsValid(string? cpf)
         {
             if (string.IsNullOrWhiteSpace(cpf))
@@ -58,7 +28,7 @@
         }
 
         // remove tudo que não for número (pontos, traço, espaços)
-        private static string OnlyDigits(string text)
+        public static string OnlyDigits(string text)
         {
             string result = "";
             foreach (char c in text)
